@@ -10,21 +10,40 @@
         top: 0; left: 0;
         width: 100%; height: 100%;
       }
+      #log {
+        position: fixed;
+        top: 10px; left: 10px;
+        color: white;
+        font-size: 14px;
+        z-index: 999;
+      }
     </style>
   </head>
   <body>
+    <div id="log">Iniciando...</div>
     <video id="video" autoplay playsinline></video>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.10/hls.min.js"></script>
     <script>
+      var log = document.getElementById('log');
       var video = document.getElementById('video');
       var streamUrl = 'https://undivided-thinner-ventricle.ngrok-free.dev/live/index.m3u8';
+
+      log.innerHTML = 'HLS suportado: ' + Hls.isSupported();
 
       if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(streamUrl);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
-          video.play();
+          log.innerHTML = 'Manifest OK! Dando play...';
+          video.play().then(function() {
+            log.innerHTML = 'Tocando!';
+          }).catch(function(e) {
+            log.innerHTML = 'Erro no play: ' + e.message;
+          });
+        });
+        hls.on(Hls.Events.ERROR, function(event, data) {
+          log.innerHTML = 'Erro: ' + data.type + ' / ' + data.details + ' / fatal: ' + data.fatal;
         });
       }
     </script>
