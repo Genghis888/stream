@@ -26,12 +26,14 @@
     <script>
       var log = document.getElementById('log');
       var video = document.getElementById('video');
-      var streamUrl = 'https://undivided-thinner-ventricle.ngrok-free.dev/live/index.m3u8?ngrok-skip-browser-warning=1';
-
-      log.innerHTML = 'HLS suportado: ' + Hls.isSupported();
+      var streamUrl = 'https://undivided-thinner-ventricle.ngrok-free.dev/live/index.m3u8';
 
       if (Hls.isSupported()) {
-        var hls = new Hls({debug: true});
+        var hls = new Hls({
+          xhrSetup: function(xhr, url) {
+            xhr.setRequestHeader('ngrok-skip-browser-warning', 'true');
+          }
+        });
         hls.loadSource(streamUrl);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
@@ -41,8 +43,6 @@
         hls.on(Hls.Events.ERROR, function(event, data) {
           log.innerHTML = 'Erro: ' + data.type + ' - ' + data.details;
         });
-      } else {
-        log.innerHTML = 'HLS nao suportado!';
       }
     </script>
   </body>
