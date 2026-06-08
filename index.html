@@ -30,14 +30,17 @@
 
       if (Hls.isSupported()) {
         var hls = new Hls({
-          xhrSetup: function(xhr, url) {
-            xhr.setRequestHeader('ngrok-skip-browser-warning', 'true');
+          fetchSetup: function(context, initParams) {
+            initParams.headers = {
+              'ngrok-skip-browser-warning': 'true'
+            };
+            return new Request(context.url, initParams);
           }
         });
         hls.loadSource(streamUrl);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
-          log.innerHTML = 'Manifest carregado!';
+          log.innerHTML = 'Funcionando!';
           video.play();
         });
         hls.on(Hls.Events.ERROR, function(event, data) {
