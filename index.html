@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.10/hls.min.js"></script>
     <script>
       var video = document.getElementById('video');
-      var streamUrl = '/live/index.m3u8';
+      var streamUrl = 'https://undivided-thinner-ventricle.ngrok-free.dev/live/index.m3u8?ngrok-skip-browser-warning=1';
 
       if (Hls.isSupported()) {
         var hls = new Hls();
